@@ -13,7 +13,7 @@ Install this plugin in the same environment as `llm`.
 ```bash
 llm install llm-mlc
 ```
-You need to install two dependencies manually - `mlc-chat-nightly` and `mlc-ai-nightly` - because the installation process differs from one platform to another in a way that is not yet automated.
+You need to install two dependencies manually - `mlc-llm-nightly` and `mlc-ai-nightly` - because the installation process differs from one platform to another in a way that is not yet automated.
 
 The steps for this are [described in detail on the mlc.ai/package](https://mlc.ai/package/) site.
 
@@ -21,7 +21,7 @@ If you are on an Apple Silicon M1/M2 Mac you can run this command:
 ```bash
 llm mlc pip install --pre --force-reinstall \
   mlc-ai-nightly \
-  mlc-chat-nightly \
+  mlc-llm-nightly \
   -f https://mlc.ai/wheels
 ```
 The `llm mlc pip` command here ensures that `pip` will run in the same virtual environment as `llm` itself.
