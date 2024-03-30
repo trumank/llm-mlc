@@ -17,7 +17,7 @@ MODEL_URLS = {
 }
 
 MLC_INSTALL = (
-    "You must install mlc_chat first. "
+    "You must install mlc_llm first. "
     "See https://github.com/simonw/llm-mlc for instructions."
 )
 
@@ -124,9 +124,9 @@ def register_commands(cli):
             ]
             subprocess.run(git_clone_command, check=True)
         click.echo("Ready to install models in {}".format(directory))
-        # Do we have mlc_chat installed?
+        # Do we have mlc_llm installed?
         try:
-            import mlc_chat
+            import mlc_llm
         except ImportError:
             raise click.ClickException(MLC_INSTALL)
 
@@ -253,9 +253,8 @@ class MlcModel(llm.Model):
 
     def execute(self, prompt, stream, response, conversation):
         try:
-            import mlc_chat
-            from mlc_chat.base import get_delta_message
-            import mlc_chat.chat_module
+            import mlc_llm
+            from mlc_llm.callback import _get_delta_message as get_delta_message
         except ImportError:
             raise click.ClickException(MLC_INSTALL)
 
@@ -263,9 +262,9 @@ class MlcModel(llm.Model):
         def noop(*args, **kwargs):
             pass
 
-        mlc_chat.chat_module.__dict__["print"] = noop
+        mlc_llm.chat_module.__dict__["print"] = noop
 
-        class StreamingChatModule(mlc_chat.ChatModule):
+        class StreamingChatModule(mlc_llm.ChatModule):
             def generate_iter(self, prompt):
                 curr_message = ""
                 self._prefill(prompt)
@@ -295,7 +294,6 @@ class MlcModel(llm.Model):
                     )
                 if messages:
                     config_kwargs["messages"] = messages
-                    config_kwargs["offset"] = len(messages)
 
             if self.chat_mod is None:
                 with temp_chdir(llm.user_dir() / "mlc"):
@@ -305,11 +303,11 @@ class MlcModel(llm.Model):
                 system_prompt = prompt.system
 
             if system_prompt is not None:
-                config_kwargs["system"] = system_prompt
+                config_kwargs["system_message"] = system_prompt
 
             chat_config_kwargs = {
                 "max_gen_len": prompt.options.max_gen_len or 512,
-                "conv_config": mlc_chat.ConvConfig(**config_kwargs),
+                "conv_config": mlc_llm.ConvConfig(**config_kwargs),
             }
             if prompt.options.temperature is not None:
                 chat_config_kwargs["temperature"] = prompt.options.temperature
@@ -320,7 +318,7 @@ class MlcModel(llm.Model):
                     "repetition_penalty"
                 ] = prompt.options.repetition_penalty
 
-            self.chat_mod.reset_chat(mlc_chat.ChatConfig(**chat_config_kwargs))
+            self.chat_mod.reset_chat(mlc_llm.ChatConfig(**chat_config_kwargs))
 
             if stream:
                 yield from self.chat_mod.generate_iter(prompt=prompt.prompt)
