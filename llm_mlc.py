@@ -11,9 +11,9 @@ from typing import Optional
 
 
 MODEL_URLS = {
-    "Llama-2-7b-chat": "https://huggingface.co/mlc-ai/mlc-chat-Llama-2-7b-chat-hf-q4f16_1",
-    "Llama-2-13b-chat": "https://huggingface.co/mlc-ai/mlc-chat-Llama-2-13b-chat-hf-q4f16_1",
-    "Llama-2-70b-chat": "https://huggingface.co/mlc-ai/mlc-chat-Llama-2-70b-chat-hf-q4f16_1",
+    "Llama-2-7b-chat": "https://huggingface.co/mlc-ai/Llama-2-7b-chat-hf-q4f16_1-MLC",
+    "Llama-2-13b-chat": "https://huggingface.co/mlc-ai/Llama-2-13b-chat-hf-q4f16_1-MLC",
+    "Llama-2-70b-chat": "https://huggingface.co/mlc-ai/Llama-2-70b-chat-hf-q4f16_1-MLC",
 }
 
 MLC_INSTALL = (
